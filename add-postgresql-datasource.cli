@@ -1,0 +1,12 @@
+# Add PostgreSQL driver module
+module add --name=org.postgresql --resources=/opt/redhat/migration/postgresql-42.7.4.jar --dependencies=javax.api,javax.transaction.api
+
+# Add PostgreSQL driver
+/subsystem=datasources/jdbc-driver=postgresql:add(driver-name="postgresql", driver-module-name="org.postgresql", driver-xa-datasource-class-name="org.postgresql.xa.PGXADataSource")
+
+# Update Keycloak datasource to use PostgreSQL
+/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=connection-url, value=jdbc:postgresql://db.galaxy/keycloak2)
+/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=driver-name,value="postgresql")
+/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=user-name, value="keycloak")
+/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=password, value="keycloak")
+
